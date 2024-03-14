@@ -1,0 +1,115 @@
+name: ReadQiitaApp_SwiftUI
+targets:
+  ReadQiitaApp_SwiftUI:
+    type: application
+    platform: iOS
+    deploymentTarget: &deployment_target "16.0"
+    info:
+      path: ReadQiitaApp_SwiftUI/Info.plist
+      properties:
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        UILaunchStoryboardName: LaunchScreen
+    entitlements:
+      path: ReadQiitaApp_SwiftUI/ReadQiitaApp_SwiftUI.entitlements
+      properties:
+        com.apple.security.application-groups: [group.masaharu.dobashi.ReadQiitaApp_SwiftUI]
+    sources:
+         - ReadQiitaApp_SwiftUI
+    settings:
+        base:
+         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES
+         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+         CODE_SIGN_STYLE: Automatic
+         DEVELOPMENT_ASSET_PATHS: "\"ReadQiitaApp_SwiftUI/Preview Content\""
+         DEVELOPMENT_TEAM: 7RPFL7EXKD
+         ENABLE_PREVIEWS: YES
+         INFOPLIST_FILE: ReadQiitaApp_SwiftUI/Info.plist
+         MARKETING_VERSION: &marketing_version 1.0.0
+         CURRENT_PROJECT_VERSIO: 1
+         PRODUCT_BUNDLE_IDENTIFIER: "masaharu.dobashi.ReadQiitaApp_SwiftUI"
+         PRODUCT_NAME: "$(TARGET_NAME)"
+    options:
+        developmentLanguage: ja
+    dependencies:
+        - package: Realm
+          product: RealmSwift
+        - package: Rswift
+          product: RswiftLibrary
+    buildToolPlugins:
+        - plugin: RswiftGenerateInternalResources
+          package: Rswift
+        
+  ReadQiitaApp_SwiftUI_Tests:
+      type: bundle.unit-test
+      platform: iOS
+      sources:
+       - ReadQiitaApp_SwiftUI_Tests
+      settings:
+        base:
+         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES
+         BUNDLE_LOADER: "$(TEST_HOST)"
+         CODE_SIGN_STYLE: Automatic
+         DEVELOPMENT_TEAM: 7RPFL7EXKD
+         INFOPLIST_FILE: ReadQiitaApp_SwiftUI_Tests/Info.plist
+         PRODUCT_BUNDLE_IDENTIFIER: "masaharu.dobashi.ReadQiitaApp_SwiftUI_Tests"
+         PRODUCT_NAME: "$(TARGET_NAME)"
+         TEST_HOST: "$(BUILT_PRODUCTS_DIR)/ReadQiitaApp_SwiftUI.app/ReadQiitaApp_SwiftUI"
+      dependencies:
+      - target: ReadQiitaApp_SwiftUI
+        
+        
+  ReadQiitaApp_SwiftUI_UITests:
+      type: bundle.ui-testing
+      platform: iOS
+      sources:
+        - ReadQiitaApp_SwiftUI_UITests
+      settings:
+        base:
+             ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES
+             CODE_SIGN_STYLE: Automatic
+             DEVELOPMENT_TEAM: 7RPFL7EXKD
+             INFOPLIST_FILE: ReadQiitaApp_SwiftUI_UITests/Info.plist
+             PRODUCT_BUNDLE_IDENTIFIER: "masaharu.dobashi.ReadQiitaApp_SwiftUI_UITests"
+             PRODUCT_NAME: "$(TARGET_NAME)"
+             TEST_TARGET_NAME: ReadQiitaApp_SwiftUI
+      dependencies:
+       - target: ReadQiitaApp_SwiftUI
+packages:
+ XcodeGen:
+    url: https://github.com/yonaskolb/XcodeGen
+    version: 2.37.0
+ Realm:
+    url: https://github.com/realm/realm-swift
+    version: 10.43.1
+ Rswift:
+    url: https://github.com/mac-cain13/R.swift
+    version: 7.4.0
+
+
+schemes:
+  ReadQiitaApp_SwiftUI:
+    build:
+      targets:
+        ReadQiitaApp_SwiftUI: all
+        ReadQiitaApp_SwiftUI_Tests: [test]
+        ReadQiitaApp_SwiftUI_UITests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      gatherCoverageData: true
+      coverageTargets:
+        - ReadQiitaApp_SwiftUI
+      targets:
+        - name: ReadQiitaApp_SwiftUI_Tests
+          parallelizable: true
+          randomExecutionOrder: true
+        - name: ReadQiitaApp_SwiftUI_UITests
+          parallelizable: true
+          randomExecutionOrder: true
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release
