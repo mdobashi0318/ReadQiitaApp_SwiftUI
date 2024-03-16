@@ -35,6 +35,7 @@ targets:
           product: RealmSwift
         - package: Rswift
           product: RswiftLibrary
+        - package: Alamofire
     buildToolPlugins:
         - plugin: RswiftGenerateInternalResources
           package: Rswift
