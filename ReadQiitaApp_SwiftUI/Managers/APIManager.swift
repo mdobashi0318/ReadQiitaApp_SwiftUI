@@ -23,16 +23,16 @@ struct APIManager {
             throw APIError(message: R.string.message.errorMessage())
         }
         
-        do {
-            let response = try await AF.request(url)
-                .validate()
-                .serializingDecodable(T.self)
-                .value
-            
-            return response
-        } catch {
+        let dataTask = await AF.request(url)
+            .validate()
+            .serializingDecodable(T.self)
+            .response
+        
+        guard let result = dataTask.value else {
             throw APIError(message: R.string.message.errorMessage())
         }
+        
+        return result
     }
     
 }
