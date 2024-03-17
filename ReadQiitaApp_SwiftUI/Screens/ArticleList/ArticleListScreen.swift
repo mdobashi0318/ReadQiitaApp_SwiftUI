@@ -13,28 +13,39 @@ struct ArticleListScreen: View {
     
     var body: some View {
         NavigationStack {
-            if viewModel.isLoading {
-                ProgressView()
-            } else {
-                List {
-                    ForEach(viewModel.model) { model in
-                        ArticleRow(article: model)
-                    }
-                }
-                .listStyle(.inset)
-            }
+            list
+                .navigationTitle("ReadQiitaApp")
         }
         .onAppear {
             viewModel.fetchArticleList()
         }
         .alert(isPresented: $viewModel.isAlertFlag) {
-            Alert(title: Text(viewModel.alertMessage), 
-                  primaryButton: .default(Text(R.string.button.retry()), 
-                                          action: viewModel.fetchArticleList
-                                         ),
-                  secondaryButton: .cancel(Text(R.string.button.close()))
-            )
+            alert
         }
+    }
+    
+    
+    @ViewBuilder
+    private var list: some View {
+        if viewModel.isLoading {
+            ProgressView()
+        } else {
+            List {
+                ForEach(viewModel.model) { model in
+                    ArticleRow(article: model)
+                }
+            }
+            .listStyle(.inset)
+        }
+    }
+    
+    private var alert: Alert {
+        Alert(title: Text(viewModel.alertMessage),
+              primaryButton: .default(Text(R.string.button.retry()),
+                                      action: viewModel.fetchArticleList
+                                     ),
+              secondaryButton: .cancel(Text(R.string.button.close()))
+        )
     }
 }
 
