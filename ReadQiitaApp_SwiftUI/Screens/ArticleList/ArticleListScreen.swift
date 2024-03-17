@@ -11,14 +11,25 @@ struct ArticleListScreen: View {
     
     @StateObject private var viewModel = ArticleListViewModel()
     
+    @State var isSheet = false
+    
     var body: some View {
         NavigationStack {
             list
                 .navigationTitle("ReadQiitaApp")
                 .navigationDestination(for: String.self) { id in
-                    if let model = viewModel.model.first(where: { $0.id == id }) {
-                        ArticleScreen(article: model)
+                    if let article = viewModel.model.first(where: { $0.id == id }) {
+                        ArticleScreen(id: article.id, url: article.url, title: article.title)
                     }
+                }
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing, content: {
+                        Button(action: {
+                            isSheet.toggle()
+                        }, label: {
+                            Image(systemName: "bookmark")
+                        })
+                    })
                 }
         }
         .onAppear {
@@ -26,6 +37,9 @@ struct ArticleListScreen: View {
         }
         .alert(isPresented: $viewModel.isAlertFlag) {
             alert
+        }
+        .sheet(isPresented: $isSheet) {
+            BookmarkListScreen()
         }
     }
     
