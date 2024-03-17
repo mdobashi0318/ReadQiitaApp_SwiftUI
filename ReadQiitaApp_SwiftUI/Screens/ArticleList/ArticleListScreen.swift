@@ -15,6 +15,11 @@ struct ArticleListScreen: View {
         NavigationStack {
             list
                 .navigationTitle("ReadQiitaApp")
+                .navigationDestination(for: String.self) { id in
+                    if let model = viewModel.model.first(where: { $0.id == id }) {
+                        ArticleScreen(article: model)
+                    }
+                }
         }
         .onAppear {
             viewModel.fetchArticleList()
@@ -32,7 +37,9 @@ struct ArticleListScreen: View {
         } else {
             List {
                 ForEach(viewModel.model) { model in
-                    ArticleRow(article: model)
+                    NavigationLink(value: model.id, label: {
+                        ArticleRow(article: model)
+                    })
                 }
             }
             .listStyle(.inset)
