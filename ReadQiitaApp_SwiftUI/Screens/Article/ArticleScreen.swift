@@ -18,7 +18,7 @@ struct ArticleScreen: View {
     
     var body: some View {
         WebView(loardUrl: URL(string: url)!)
-            .navigationTitle("記事")
+            .navigationTitle(R.string.label.article())
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing, content: {
                     Button(action: {
@@ -33,7 +33,7 @@ struct ArticleScreen: View {
                         }
                         
                     }, label: {
-                        if let model = bookmarks.where({ $0.id == self.id }).first {
+                        if let _ = bookmarks.where({ $0.id == self.id }).first {
                             Image(systemName: "trash")
                         } else {
                             Image(systemName: "plus")

@@ -21,7 +21,7 @@ struct BookmarkListScreen: View {
                     })
                 }
             }
-            .navigationTitle("ブックマーク")
+            .navigationTitle(R.string.label.bookmark())
             .navigationDestination(for: String.self, destination: { id in
                 if let article = bookmarks.first(where: { $0.id == id }) {
                     ArticleScreen(id: article.id, url: article.url, title: article.title)
