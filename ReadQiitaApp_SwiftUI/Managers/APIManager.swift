@@ -18,12 +18,12 @@ struct APIManager {
     
     private static let baseUrl = "https://qiita.com/api/v2/"
     
-    static func request<T: Codable>(request: String) async throws -> T {
+    static func request<T: Codable>(request: String, param: Parameters? = nil) async throws -> T {
         guard let url = URL(string: baseUrl + request) else {
             throw APIError(message: R.string.message.errorMessage())
         }
         
-        let dataTask = await AF.request(url)
+        let dataTask = await AF.request(url, parameters: param)
             .validate()
             .serializingDecodable(T.self)
             .response

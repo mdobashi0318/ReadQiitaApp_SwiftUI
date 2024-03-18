@@ -57,6 +57,15 @@ struct ArticleListScreen: View {
                 }
             }
             .listStyle(.inset)
+            .searchable(text: $viewModel.searchText)
+            .onSubmit(of: .search) {
+                viewModel.fetchArticleList()
+            }
+            .onChange(of: viewModel.searchText) { text in
+                if text.isEmpty {
+                    viewModel.fetchArticleList()
+                }
+            }
         }
     }
     

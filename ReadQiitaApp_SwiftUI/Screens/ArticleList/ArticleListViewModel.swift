@@ -17,12 +17,18 @@ class ArticleListViewModel: ObservableObject {
     
     @Published var isAlertFlag = false
     
+    @Published var searchText = ""
+    
     @MainActor
     func fetchArticleList() {
         Task {
             do {
                 isLoading = true
-                model = try await APIManager.request(request: "items")
+                if searchText.isEmpty {
+                    model = try await APIManager.request(request: "items")
+                } else {
+                    model = try await APIManager.request(request: "items", param: ["query": searchText])
+                }
                 isLoading = false
             } catch {
                 isLoading = false
