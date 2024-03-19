@@ -24,6 +24,25 @@ struct ArticleListScreen: View {
                 }
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing, content: {
+                        Menu(content: {
+                            Button(action: {
+                                viewModel.mode = .keyword
+                            }, label: {
+                                Text("キーワード検索")
+                            })
+                            
+                            Button(action: {
+                                viewModel.mode = .tag
+                            }, label: {
+                                Text("タグ検索")
+                            })
+                        }, label: {
+                            Image(systemName: "magnifyingglass")
+                        })
+                    })
+
+                    
+                    ToolbarItem(placement: .topBarTrailing, content: {
                         Button(action: {
                             isSheet.toggle()
                         }, label: {

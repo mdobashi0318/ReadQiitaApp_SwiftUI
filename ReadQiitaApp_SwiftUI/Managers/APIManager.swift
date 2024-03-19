@@ -28,6 +28,10 @@ struct APIManager {
             .serializingDecodable(T.self)
             .response
         
+        if let request = dataTask.request {
+            print("API Request: \(request)")
+        }
+            
         guard let result = dataTask.value else {
             throw APIError(message: R.string.message.errorMessage())
         }

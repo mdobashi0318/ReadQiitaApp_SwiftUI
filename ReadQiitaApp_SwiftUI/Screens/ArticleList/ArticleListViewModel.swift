@@ -19,15 +19,26 @@ class ArticleListViewModel: ObservableObject {
     
     @Published var searchText = ""
     
+    var mode: SearchMode = .keyword
+    
     @MainActor
     func fetchArticleList() {
         Task {
             do {
                 isLoading = true
-                if searchText.isEmpty {
-                    model = try await APIManager.request(request: "items")
+                
+                if mode == .keyword {
+                    if searchText.isEmpty {
+                        model = try await APIManager.request(request: "items")
+                    } else {
+                        model = try await APIManager.request(request: "items", param: ["query": searchText])
+                    }
                 } else {
-                    model = try await APIManager.request(request: "items", param: ["query": searchText])
+                    if searchText.isEmpty {
+                        model = try await APIManager.request(request: "items")
+                    } else {
+                        model = try await APIManager.request(request: "tags/\(searchText)/items")
+                    }
                 }
                 isLoading = false
             } catch {
@@ -42,4 +53,10 @@ class ArticleListViewModel: ObservableObject {
             }
         }
     }
+    
+    enum SearchMode {
+        case keyword
+        case tag
+    }
+
 }
