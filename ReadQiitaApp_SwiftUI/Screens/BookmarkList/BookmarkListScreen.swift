@@ -10,7 +10,9 @@ import RealmSwift
 
 struct BookmarkListScreen: View {
     
-    @ObservedResults(Bookmark.self) var bookmarks
+    @ObservedResults(Bookmark.self) private var bookmarks
+    
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         NavigationStack {
@@ -22,6 +24,15 @@ struct BookmarkListScreen: View {
                 }
             }
             .navigationTitle(R.string.label.bookmark())
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: {
+                        dismiss()
+                    }, label: {
+                        Image(systemName: "xmark")
+                    })
+                }
+            }
             .navigationDestination(for: String.self, destination: { id in
                 if let article = bookmarks.first(where: { $0.id == id }) {
                     ArticleScreen(id: article.id, url: article.url, title: article.title)

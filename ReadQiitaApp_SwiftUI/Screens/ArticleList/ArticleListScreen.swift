@@ -11,7 +11,7 @@ struct ArticleListScreen: View {
     
     @StateObject private var viewModel = ArticleListViewModel()
     
-    @State var isSheet = false
+    @State private var isBookmarkSheet = false
     
     var body: some View {
         NavigationStack {
@@ -23,32 +23,9 @@ struct ArticleListScreen: View {
                     }
                 }
                 .toolbar {
-                    ToolbarItem(placement: .topBarTrailing, content: {
-                        Menu(content: {
-                            Button(action: {
-                                viewModel.mode = .keyword
-                            }, label: {
-                                Text("キーワード検索")
-                            })
-                            
-                            Button(action: {
-                                viewModel.mode = .tag
-                            }, label: {
-                                Text("タグ検索")
-                            })
-                        }, label: {
-                            Image(systemName: "magnifyingglass")
-                        })
-                    })
-
-                    
-                    ToolbarItem(placement: .topBarTrailing, content: {
-                        Button(action: {
-                            isSheet.toggle()
-                        }, label: {
-                            Image(systemName: "bookmark")
-                        })
-                    })
+                    ToolbarItemGroup(placement: .topBarTrailing) {
+                        topBarTrailing
+                    }
                 }
                 .searchable(text: $viewModel.searchText)
                 .onSubmit(of: .search) {
@@ -66,7 +43,7 @@ struct ArticleListScreen: View {
         .alert(isPresented: $viewModel.isAlertFlag) {
             alert
         }
-        .sheet(isPresented: $isSheet) {
+        .fullScreenCover(isPresented: $isBookmarkSheet) {
             BookmarkListScreen()
         }
     }
@@ -95,6 +72,31 @@ struct ArticleListScreen: View {
                                      ),
               secondaryButton: .cancel(Text(R.string.button.close()))
         )
+    }
+    
+    @ViewBuilder
+    private var topBarTrailing: some View {
+            Menu(content: {
+                Button(action: {
+                    viewModel.mode = .keyword
+                }, label: {
+                    Text(R.string.label.keywordSearch())
+                })
+                
+                Button(action: {
+                    viewModel.mode = .tag
+                }, label: {
+                    Text(R.string.label.tagSearch())
+                })
+            }, label: {
+                Image(systemName: "magnifyingglass")
+            })
+            
+            Button(action: {
+                isBookmarkSheet.toggle()
+            }, label: {
+                Image(systemName: "bookmark")
+            })
     }
 }
 
