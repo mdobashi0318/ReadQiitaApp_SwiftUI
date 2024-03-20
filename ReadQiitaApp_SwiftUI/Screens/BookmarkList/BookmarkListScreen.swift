@@ -6,18 +6,17 @@
 //
 
 import SwiftUI
-import RealmSwift
 
 struct BookmarkListScreen: View {
     
-    @ObservedResults(Bookmark.self) private var bookmarks
+    @StateObject private var viewModel = BookmarkListViewModel()
     
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         NavigationStack {
             List {
-                ForEach(bookmarks) { bookmark in
+                ForEach(viewModel.model) { bookmark in
                     NavigationLink(value: bookmark.id , label: {
                         Text(bookmark.title)
                     })
@@ -34,8 +33,11 @@ struct BookmarkListScreen: View {
                 }
             }
             .navigationDestination(for: String.self, destination: { id in
-                if let article = bookmarks.first(where: { $0.id == id }) {
+                if let article = viewModel.model.first(where: { $0.id == id }) {
                     ArticleScreen(id: article.id, url: article.url, title: article.title)
+                        .onDisappear {
+                            viewModel.allFetch()
+                        }
                 }
             })
         }

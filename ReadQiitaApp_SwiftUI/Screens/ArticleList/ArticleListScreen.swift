@@ -13,6 +13,10 @@ struct ArticleListScreen: View {
     
     @State private var isBookmarkSheet = false
     
+    init() {
+        RealmManager.initConfig()
+    }
+    
     var body: some View {
         NavigationStack {
             list
@@ -62,6 +66,9 @@ struct ArticleListScreen: View {
                 }
             }
             .listStyle(.inset)
+            .refreshable {
+                viewModel.fetchArticleList()
+            }
         }
     }
     

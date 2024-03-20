@@ -15,5 +15,19 @@ class Bookmark: Object, Identifiable {
     @Persisted var title: String = ""
      
     @Persisted var url: String = ""
+    
+    
+    static func allFetch() throws -> [Bookmark] {
+        do {
+            var model: [Bookmark] = []
+            let realm = try Realm()
+            realm.objects(Bookmark.self).freeze().forEach {
+                model.append($0)
+            }
+            return model
+        } catch {
+            throw APIError(message: "")
+        }
+    }
      
 }

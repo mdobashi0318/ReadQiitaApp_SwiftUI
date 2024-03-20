@@ -11,3 +11,7 @@
 
 "KeywordSearch" = "キーワード検索";
 "TagSearch" = "タグ検索";
+
+
+"AddBookmark" = "ブックマークに追加しました。";
+"DeleteBookmark" = "ブックマークを削除しました。";
