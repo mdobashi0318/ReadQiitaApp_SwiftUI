@@ -19,7 +19,7 @@ class ArticleListViewModel: ObservableObject {
     
     @Published var searchText = ""
     
-    var mode: SearchMode = .keyword
+    @Published var mode: SearchMode = .keyword
     
     @MainActor
     func fetchArticleList() {

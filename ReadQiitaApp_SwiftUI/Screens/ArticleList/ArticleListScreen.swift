@@ -31,7 +31,8 @@ struct ArticleListScreen: View {
                         topBarTrailing
                     }
                 }
-                .searchable(text: $viewModel.searchText)
+                .searchable(text: $viewModel.searchText,
+                            prompt: Text(viewModel.mode == .keyword ? R.string.message.keywordSearch() : R.string.message.tagSearch()))
                 .onSubmit(of: .search) {
                     viewModel.fetchArticleList()
                 }
@@ -87,13 +88,21 @@ struct ArticleListScreen: View {
                 Button(action: {
                     viewModel.mode = .keyword
                 }, label: {
-                    Text(R.string.label.keywordSearch())
+                    if viewModel.mode == .keyword {
+                        Label(R.string.label.keywordSearch(), systemImage: "checkmark")
+                    } else {
+                        Text(R.string.label.keywordSearch())
+                    }
+                    
                 })
-                
                 Button(action: {
                     viewModel.mode = .tag
                 }, label: {
-                    Text(R.string.label.tagSearch())
+                    if viewModel.mode == .tag {
+                        Label(R.string.label.tagSearch(), systemImage: "checkmark")
+                    } else {
+                        Text(R.string.label.tagSearch())
+                    }
                 })
             }, label: {
                 Image(systemName: "magnifyingglass")
