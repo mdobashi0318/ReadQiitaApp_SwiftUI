@@ -15,6 +15,34 @@ struct BookmarkListScreen: View {
     
     var body: some View {
         NavigationStack {
+            list
+                .navigationTitle(R.string.label.bookmark())
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button(action: {
+                            dismiss()
+                        }, label: {
+                            Image(systemName: "xmark")
+                        })
+                    }
+                }
+                .navigationDestination(for: String.self, destination: { id in
+                    if let article = viewModel.model.first(where: { $0.id == id }) {
+                        ArticleScreen(id: article.id, url: article.url, title: article.title)
+                            .onDisappear {
+                                viewModel.allFetch()
+                            }
+                    }
+                })
+        }
+    }
+    
+    
+    @ViewBuilder
+    private var list: some View {
+        if viewModel.model.isEmpty {
+            Text(R.string.label.noBookmark())
+        } else {
             List {
                 ForEach(viewModel.model) { bookmark in
                     NavigationLink(value: bookmark.id , label: {
@@ -22,24 +50,6 @@ struct BookmarkListScreen: View {
                     })
                 }
             }
-            .navigationTitle(R.string.label.bookmark())
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button(action: {
-                        dismiss()
-                    }, label: {
-                        Image(systemName: "xmark")
-                    })
-                }
-            }
-            .navigationDestination(for: String.self, destination: { id in
-                if let article = viewModel.model.first(where: { $0.id == id }) {
-                    ArticleScreen(id: article.id, url: article.url, title: article.title)
-                        .onDisappear {
-                            viewModel.allFetch()
-                        }
-                }
-            })
         }
     }
 }
