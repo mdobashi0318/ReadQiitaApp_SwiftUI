@@ -59,16 +59,20 @@ struct ArticleListScreen: View {
         if viewModel.isLoading {
             ProgressView()
         } else {
-            List {
-                ForEach(viewModel.model) { model in
-                    NavigationLink(value: model.id, label: {
-                        ArticleRow(article: model)
-                    })
+            if viewModel.model.isEmpty {
+                Text(R.string.label.noArticle)
+            } else {
+                List {
+                    ForEach(viewModel.model) { model in
+                        NavigationLink(value: model.id, label: {
+                            ArticleRow(article: model)
+                        })
+                    }
                 }
-            }
-            .listStyle(.inset)
-            .refreshable {
-                viewModel.fetchArticleList()
+                .listStyle(.inset)
+                .refreshable {
+                    viewModel.fetchArticleList()
+                }
             }
         }
     }
