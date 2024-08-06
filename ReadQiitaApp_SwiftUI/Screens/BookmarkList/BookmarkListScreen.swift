@@ -9,7 +9,7 @@ import SwiftUI
 
 struct BookmarkListScreen: View {
     
-    @StateObject private var viewModel = BookmarkListViewModel()
+    @State private var viewModel = BookmarkListViewModel()
     
     @Environment(\.dismiss) private var dismiss
     
@@ -34,6 +34,11 @@ struct BookmarkListScreen: View {
                             }
                     }
                 })
+                .alert(isPresented: $viewModel.isShowAlert) {
+                    Alert(title: Text(viewModel.alertMessage),
+                          dismissButton: .cancel(Text("閉じる"), action: { dismiss() })
+                    )
+                }
         }
     }
     

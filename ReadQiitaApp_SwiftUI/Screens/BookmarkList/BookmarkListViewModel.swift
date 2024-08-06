@@ -7,14 +7,14 @@
 
 import Foundation
 
-
-class BookmarkListViewModel: ObservableObject {
+@Observable
+class BookmarkListViewModel {
     
-    @Published var model: [Bookmark] = []
+    var model: [Bookmark] = []
     
-    @Published var alertMessage = ""
+    var isShowAlert = false
     
-    @Published var isAlertFlag = false
+    private(set) var alertMessage = ""
     
     init() {
         allFetch()
@@ -24,8 +24,8 @@ class BookmarkListViewModel: ObservableObject {
         do {
             model = try Bookmark.allFetch()
         } catch {
-            alertMessage = ""
-            isAlertFlag.toggle()
+            alertMessage = R.string.message.errorMessage()
+            isShowAlert.toggle()
         }
         
     }
