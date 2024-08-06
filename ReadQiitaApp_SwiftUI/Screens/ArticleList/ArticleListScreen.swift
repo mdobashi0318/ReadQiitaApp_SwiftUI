@@ -12,10 +12,7 @@ struct ArticleListScreen: View {
     @State private var viewModel = ArticleListViewModel()
     
     @State private var isBookmarkSheet = false
-    
-    init() {
-        RealmManager.initConfig()
-    }
+
     
     var body: some View {
         NavigationStack {
