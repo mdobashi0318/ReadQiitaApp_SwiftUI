@@ -10,11 +10,11 @@ import Foundation
 @Observable
 class ArticleListViewModel {
     
-    var model: [Article] = []
+    private(set) var model: [Article] = []
     
-    var isLoading = false
+    private(set) var isLoading = false
     
-    var alertMessage = ""
+    private(set) var alertMessage = ""
     
     var isAlertFlag = false
     
