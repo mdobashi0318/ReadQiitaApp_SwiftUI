@@ -3,7 +3,7 @@ targets:
   ReadQiitaApp_SwiftUI:
     type: application
     platform: iOS
-    deploymentTarget: &deployment_target "16.0"
+    deploymentTarget: &deployment_target "17.0"
     info:
       path: ReadQiitaApp_SwiftUI/Info.plist
       properties:
