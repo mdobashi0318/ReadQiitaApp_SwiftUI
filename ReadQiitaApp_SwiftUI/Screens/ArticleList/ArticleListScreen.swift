@@ -42,7 +42,7 @@ struct ArticleListScreen: View {
         .onAppear {
             viewModel.fetchArticleList()
         }
-        .alert(isPresented: $viewModel.isAlertFlag) {
+        .alert(isPresented: $viewModel.isShowAlert) {
             alert
         }
         .fullScreenCover(isPresented: $isBookmarkSheet) {

@@ -16,7 +16,7 @@ class ArticleListViewModel {
     
     private(set) var alertMessage = ""
     
-    var isAlertFlag = false
+    var isShowAlert = false
     
     var searchText = ""
     
@@ -45,10 +45,10 @@ class ArticleListViewModel {
             } catch {
                 isLoading = false
                 if let error = error as? APIError {
-                    isAlertFlag.toggle()
+                    isShowAlert.toggle()
                     alertMessage = error.message
                 } else {
-                    isAlertFlag.toggle()
+                    isShowAlert.toggle()
                     alertMessage = error.localizedDescription
                 }
             }
