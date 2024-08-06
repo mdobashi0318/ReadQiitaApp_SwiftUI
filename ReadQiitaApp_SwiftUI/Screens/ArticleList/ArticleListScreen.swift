@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ArticleListScreen: View {
     
-    @StateObject private var viewModel = ArticleListViewModel()
+    @State private var viewModel = ArticleListViewModel()
     
     @State private var isBookmarkSheet = false
     
@@ -36,8 +36,8 @@ struct ArticleListScreen: View {
                 .onSubmit(of: .search) {
                     viewModel.fetchArticleList()
                 }
-                .onChange(of: viewModel.searchText) { text in
-                    if text.isEmpty {
+                .onChange(of: viewModel.searchText) {
+                    if viewModel.searchText.isEmpty {
                         viewModel.fetchArticleList()
                     }
                 }

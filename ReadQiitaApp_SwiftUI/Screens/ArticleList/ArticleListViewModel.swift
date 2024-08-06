@@ -7,21 +7,22 @@
 
 import Foundation
 
-class ArticleListViewModel: ObservableObject {
+@Observable
+class ArticleListViewModel {
     
-    @Published var model: [Article] = []
+    var model: [Article] = []
     
-    @Published var isLoading = false
+    var isLoading = false
     
-    @Published var alertMessage = ""
+    var alertMessage = ""
     
-    @Published var isAlertFlag = false
+    var isAlertFlag = false
     
-    @Published var searchText = ""
+    var searchText = ""
     
-    @Published var mode: SearchMode = .keyword
+    var mode: SearchMode = .keyword
     
-    @MainActor
+    
     func fetchArticleList() {
         Task {
             do {
