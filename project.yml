@@ -78,16 +78,16 @@ targets:
 packages:
  XcodeGen:
     url: https://github.com/yonaskolb/XcodeGen
-    version: 2.39.1
+    version: 2.42.0
  Realm:
     url: https://github.com/realm/realm-swift
-    version: 10.48.0
+    version: 10.52.2
  Rswift:
     url: https://github.com/mac-cain13/R.swift
     version: 7.4.0
  Alamofire:
     url: https://github.com/Alamofire/Alamofire
-    version: 5.9.0
+    version: 5.9.1
 
 schemes:
   ReadQiitaApp_SwiftUI:
