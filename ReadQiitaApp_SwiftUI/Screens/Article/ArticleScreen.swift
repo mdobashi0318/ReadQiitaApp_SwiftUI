@@ -18,12 +18,12 @@ struct ArticleScreen: View {
     
     @State private var alertMessage = ""
     
-    @State private var isAlertFlag = false
+    @State private var isShowAlert = false
     
     @State private var isAdd = false
     
     var body: some View {
-        WebView(loardUrl: URL(string: url)!)
+        WebView(loadUrl: URL(string: url)!)
             .navigationTitle(R.string.label.article())
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing, content: {
@@ -31,7 +31,7 @@ struct ArticleScreen: View {
                         if let model = bookmarks.where({ $0.id == self.id }).first {
                             isAdd = false
                             $bookmarks.remove(model)
-                            isAlertFlag.toggle()
+                            isShowAlert.toggle()
                         } else {
                             isAdd = true
                             let model = Bookmark()
@@ -39,7 +39,7 @@ struct ArticleScreen: View {
                             model.url = url
                             model.title = title
                             $bookmarks.append(model)
-                            isAlertFlag.toggle()
+                            isShowAlert.toggle()
                         }
                         
                     }, label: {
@@ -52,7 +52,7 @@ struct ArticleScreen: View {
                     })
                 })
             }
-            .alert(isPresented: $isAlertFlag) {
+            .alert(isPresented: $isShowAlert) {
                     return Alert(title: Text(isAdd ? R.string.label.addBookmark() : R.string.label.deleteBookmark()), dismissButton: .default(Text(R.string.button.close())))
                 
             }

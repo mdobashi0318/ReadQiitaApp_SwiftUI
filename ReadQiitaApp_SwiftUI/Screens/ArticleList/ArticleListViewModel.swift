@@ -7,21 +7,22 @@
 
 import Foundation
 
-class ArticleListViewModel: ObservableObject {
+@Observable
+class ArticleListViewModel {
     
-    @Published var model: [Article] = []
+    private(set) var model: [Article] = []
     
-    @Published var isLoading = false
+    private(set) var isLoading = false
     
-    @Published var alertMessage = ""
+    private(set) var alertMessage = ""
     
-    @Published var isAlertFlag = false
+    var isShowAlert = false
     
-    @Published var searchText = ""
+    var searchText = ""
     
-    @Published var mode: SearchMode = .keyword
+    var mode: SearchMode = .keyword
     
-    @MainActor
+    
     func fetchArticleList() {
         Task {
             do {
@@ -44,10 +45,10 @@ class ArticleListViewModel: ObservableObject {
             } catch {
                 isLoading = false
                 if let error = error as? APIError {
-                    isAlertFlag.toggle()
+                    isShowAlert.toggle()
                     alertMessage = error.message
                 } else {
-                    isAlertFlag.toggle()
+                    isShowAlert.toggle()
                     alertMessage = error.localizedDescription
                 }
             }

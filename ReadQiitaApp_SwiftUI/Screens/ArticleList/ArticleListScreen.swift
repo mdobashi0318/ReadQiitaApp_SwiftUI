@@ -9,13 +9,10 @@ import SwiftUI
 
 struct ArticleListScreen: View {
     
-    @StateObject private var viewModel = ArticleListViewModel()
+    @State private var viewModel = ArticleListViewModel()
     
     @State private var isBookmarkSheet = false
-    
-    init() {
-        RealmManager.initConfig()
-    }
+
     
     var body: some View {
         NavigationStack {
@@ -36,8 +33,8 @@ struct ArticleListScreen: View {
                 .onSubmit(of: .search) {
                     viewModel.fetchArticleList()
                 }
-                .onChange(of: viewModel.searchText) { text in
-                    if text.isEmpty {
+                .onChange(of: viewModel.searchText) {
+                    if viewModel.searchText.isEmpty {
                         viewModel.fetchArticleList()
                     }
                 }
@@ -45,7 +42,7 @@ struct ArticleListScreen: View {
         .onAppear {
             viewModel.fetchArticleList()
         }
-        .alert(isPresented: $viewModel.isAlertFlag) {
+        .alert(isPresented: $viewModel.isShowAlert) {
             alert
         }
         .fullScreenCover(isPresented: $isBookmarkSheet) {
