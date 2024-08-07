@@ -23,7 +23,7 @@ struct ArticleScreen: View {
     @State private var isAdd = false
     
     var body: some View {
-        WebView(loardUrl: URL(string: url)!)
+        WebView(loadUrl: URL(string: url)!)
             .navigationTitle(R.string.label.article())
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing, content: {
