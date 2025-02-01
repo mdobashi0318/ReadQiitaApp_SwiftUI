@@ -42,15 +42,10 @@ class ArticleListViewModel {
                     }
                 }
                 isLoading = false
-            } catch {
+            } catch(let error as APIError) {
                 isLoading = false
-                if let error = error as? APIError {
-                    isShowAlert.toggle()
-                    alertMessage = error.message
-                } else {
-                    isShowAlert.toggle()
-                    alertMessage = error.localizedDescription
-                }
+                isShowAlert.toggle()
+                alertMessage = error.message
             }
         }
     }
