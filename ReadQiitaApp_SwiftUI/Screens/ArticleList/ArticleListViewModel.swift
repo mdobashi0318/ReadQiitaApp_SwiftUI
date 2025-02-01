@@ -22,7 +22,7 @@ class ArticleListViewModel {
     
     var mode: SearchMode = .keyword
     
-    
+    @MainActor
     func fetchArticleList() {
         Task {
             do {
