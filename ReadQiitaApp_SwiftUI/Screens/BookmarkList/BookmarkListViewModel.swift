@@ -24,7 +24,7 @@ class BookmarkListViewModel {
         do {
             model = try Bookmark.allFetch()
         } catch {
-            alertMessage = R.string.message.errorMessage()
+            alertMessage = error.message
             isShowAlert.toggle()
         }
         

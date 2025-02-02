@@ -8,6 +8,17 @@
 import Foundation
 import RealmSwift
 
+struct DBError: Error {
+    
+    let message: String
+    
+    init(message: String) {
+        self.message = message
+    }
+}
+
+
+
 class Bookmark: Object, Identifiable {
     
     @Persisted(primaryKey: true) var id: String = ""
@@ -17,7 +28,7 @@ class Bookmark: Object, Identifiable {
     @Persisted var url: String = ""
     
     
-    static func allFetch() throws -> [Bookmark] {
+    static func allFetch() throws(DBError) -> [Bookmark] {
         do {
             var model: [Bookmark] = []
             let realm = try Realm()
@@ -26,7 +37,7 @@ class Bookmark: Object, Identifiable {
             }
             return model
         } catch {
-            throw APIError(message: "")
+            throw DBError(message: R.string.message.errorMessage())
         }
     }
      
