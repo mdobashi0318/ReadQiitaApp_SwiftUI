@@ -7,27 +7,13 @@
 
 import Foundation
 
-@Observable
-class BookmarkListViewModel {
-    
-    var model: [Bookmark] = []
-    
-    var isShowAlert = false
-    
-    private(set) var alertMessage = ""
-    
-    init() {
-        allFetch()
-    }
-    
-    func allFetch() {
-        do {
-            model = try Bookmark.allFetch()
-        } catch {
-            alertMessage = error.message
-            isShowAlert.toggle()
-        }
-        
-    }
-    
-}
+//@Observable
+//class BookmarkListViewModel {
+//    
+//    var model: [Bookmark] = []
+//    
+//    var isShowAlert = false
+//    
+//    var alertMessage = ""
+//        
+//}

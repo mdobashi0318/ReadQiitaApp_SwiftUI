@@ -6,17 +6,15 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct ReadQiitaApp_SwiftUIApp: App {
     
-    init() {
-        RealmManager.initConfig()
-    }
-    
     var body: some Scene {
         WindowGroup {
             ArticleListScreen()
+                .modelContainer(for: Bookmark.self, isAutosaveEnabled: true)
         }
     }
 }

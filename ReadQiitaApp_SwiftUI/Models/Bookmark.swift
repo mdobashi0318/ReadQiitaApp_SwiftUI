@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import RealmSwift
+import SwiftData
 
 struct DBError: Error {
     
@@ -18,27 +18,15 @@ struct DBError: Error {
 }
 
 
-
-class Bookmark: Object, Identifiable {
+@Model
+class Bookmark {
     
-    @Persisted(primaryKey: true) var id: String = ""
-     
-    @Persisted var title: String = ""
-     
-    @Persisted var url: String = ""
+    @Relationship(.unique) var id: String = ""
     
+    var title: String = ""
     
-    static func allFetch() throws(DBError) -> [Bookmark] {
-        do {
-            var model: [Bookmark] = []
-            let realm = try Realm()
-            realm.objects(Bookmark.self).freeze().forEach {
-                model.append($0)
-            }
-            return model
-        } catch {
-            throw DBError(message: R.string.message.errorMessage())
-        }
-    }
-     
+    var url: String = ""
+    
+    init() { }
+    
 }
