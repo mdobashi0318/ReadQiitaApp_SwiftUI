@@ -14,6 +14,8 @@ struct ArticleScreen: View {
     
     @Query private var bookmarks: [Bookmark]
     
+    @Query private var historys: [History]
+    
     private let id: String
     private let url: String
     private let title: String
@@ -26,6 +28,14 @@ struct ArticleScreen: View {
     
     init(id: String, url: String, title: String) {
         _bookmarks = Query(filter: #Predicate { model in
+            if id.isEmpty {
+                true
+            } else {
+                model.id.localizedStandardContains(id)
+            }
+        })
+        
+        _historys = Query(filter: #Predicate { model in
             if id.isEmpty {
                 true
             } else {
@@ -45,6 +55,22 @@ struct ArticleScreen: View {
             }
             .alert(isPresented: $isShowAlert) {
                 return Alert(title: Text(isAdd ? R.string.label.addBookmark() : R.string.label.deleteBookmark()), dismissButton: .default(Text(R.string.button.close())))
+            }
+            .onAppear {
+                let created_at = DateFormatter.format_yyyyMMddHHmmSSSS()
+                if let history = historys.first {
+                    history.update_at = created_at
+                } else {
+                    let history = History()
+                    history.id = id
+                    history.url = url
+                    history.title = title
+                    history.created_at = created_at
+                    history.update_at = created_at
+                    modelContext.insert(history)
+                }
+                
+                
             }
     }
     

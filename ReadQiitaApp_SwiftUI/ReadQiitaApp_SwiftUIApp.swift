@@ -14,7 +14,7 @@ struct ReadQiitaApp_SwiftUIApp: App {
     var body: some Scene {
         WindowGroup {
             ArticleListScreen()
-                .modelContainer(for: Bookmark.self, isAutosaveEnabled: true)
+                .modelContainer(for: [Bookmark.self, History.self], isAutosaveEnabled: true)
         }
     }
 }

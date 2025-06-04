@@ -9,7 +9,8 @@ import Foundation
 
 extension DateFormatter {
     
-
+    static let created_at = format_yyyyMMddHHmmSSSS()
+    
     private static func _dateFormatter(type: FormatType) -> DateFormatter {
           let formatter: DateFormatter = DateFormatter()
           formatter.dateFormat = switch type {
@@ -64,6 +65,17 @@ extension DateFormatter {
           
           return formatter.date(from: s_Date) ?? Date()
       }
+     
+     // 現在日時をの文字列をyyy/MM/dd HH:mm:SSSS形式で返す
+     static func format_yyyyMMddHHmmSSSS() -> String {
+         let dateFormatter = DateFormatter()
+         dateFormatter.dateFormat = "yyyy/MM/dd HH:mm:SSSS"
+         dateFormatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
+         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+         
+         return dateFormatter.string(from: Date.now)
+     }
+    
       
       enum FormatType {
           case secnd
