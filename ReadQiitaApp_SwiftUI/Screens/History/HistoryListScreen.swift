@@ -15,6 +15,10 @@ struct HistoryListScreen: View {
     
     @Environment(\.dismiss) private var dismiss
     
+    init() {
+        _historyList = Query(sort: [SortDescriptor(\History.update_at, order: .reverse)])
+    }
+    
     var body: some View {
         NavigationStack {
             List {

@@ -57,7 +57,7 @@ struct ArticleScreen: View {
                 return Alert(title: Text(isAdd ? R.string.label.addBookmark() : R.string.label.deleteBookmark()), dismissButton: .default(Text(R.string.button.close())))
             }
             .onAppear {
-                let created_at = DateFormatter.format_yyyyMMddHHmmSSSS()
+                let created_at = DateFormatter.dateFormatNow(type: .secnd)
                 if let history = historys.first {
                     history.update_at = created_at
                 } else {

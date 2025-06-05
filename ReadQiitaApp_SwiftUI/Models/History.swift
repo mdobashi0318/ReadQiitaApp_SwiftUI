@@ -5,6 +5,7 @@
 //  Created by 土橋正晴 on 2025/06/03.
 //
 
+import Foundation
 import SwiftData
 
 @Model
@@ -16,9 +17,9 @@ class History {
     
     var url: String = ""
     
-    var created_at: String = ""
+    var created_at: Date = Date()
     
-    var update_at: String = ""
+    var update_at: Date = Date()
     
     init() { }
     
