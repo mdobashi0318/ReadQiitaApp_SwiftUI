@@ -6,15 +6,19 @@
 //
 
 import SwiftUI
-import RealmSwift
+import SwiftData
 
 struct ArticleScreen: View {
     
-    @ObservedResults(Bookmark.self) private var bookmarks
+    @Environment(\.modelContext) private var modelContext
     
-    let id: String
-    let url: String
-    let title: String
+    @Query private var bookmarks: [Bookmark]
+    
+    @Query private var historys: [History]
+    
+    private let id: String
+    private let url: String
+    private let title: String
     
     @State private var alertMessage = ""
     
@@ -22,40 +26,80 @@ struct ArticleScreen: View {
     
     @State private var isAdd = false
     
+    init(id: String, url: String, title: String) {
+        _bookmarks = Query(filter: #Predicate { model in
+            if id.isEmpty {
+                true
+            } else {
+                model.id.localizedStandardContains(id)
+            }
+        })
+        
+        _historys = Query(sort: [SortDescriptor(\History.update_at, order: .reverse)])
+        self.id = id
+        self.url = url
+        self.title = title
+    }
+    
     var body: some View {
         WebView(loadUrl: URL(string: url)!)
             .navigationTitle(R.string.label.article())
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing, content: {
-                    Button(action: {
-                        if let model = bookmarks.where({ $0.id == self.id }).first {
-                            isAdd = false
-                            $bookmarks.remove(model)
-                            isShowAlert.toggle()
-                        } else {
-                            isAdd = true
-                            let model = Bookmark()
-                            model.id = id
-                            model.url = url
-                            model.title = title
-                            $bookmarks.append(model)
-                            isShowAlert.toggle()
-                        }
-                        
-                    }, label: {
-                        if let _ = bookmarks.where({ $0.id == self.id }).first {
-                            Image(systemName: "trash")
-                        } else {
-                            Image(systemName: "plus")
-                        }
-                        
-                    })
-                })
+                toolbar
             }
             .alert(isPresented: $isShowAlert) {
-                    return Alert(title: Text(isAdd ? R.string.label.addBookmark() : R.string.label.deleteBookmark()), dismissButton: .default(Text(R.string.button.close())))
+                return Alert(title: Text(isAdd ? R.string.label.addBookmark() : R.string.label.deleteBookmark()), dismissButton: .default(Text(R.string.button.close())))
+            }
+            .onAppear {
+                let date = DateFormatter.dateFormatNow(type: .secnd)
+                if let history = historys.first(where: { $0.id == id }) {
+                    history.update_at = date
+                } else {
+                    let history = History()
+                    history.id = id
+                    history.url = url
+                    history.title = title
+                    history.created_at = date
+                    history.update_at = date
+                    modelContext.insert(history)
+                    
+                    if historys.count >= 30,
+                       let last = historys.last {
+                        modelContext.delete(last)
+                    }
+                }
+                
                 
             }
+    }
+    
+    
+    private var toolbar: some ToolbarContent {
+        ToolbarItem(placement: .topBarTrailing, content: {
+            Button(action: {
+                if let bookmark = bookmarks.first {
+                    isAdd = false
+                    modelContext.delete(bookmark)
+                    isShowAlert.toggle()
+                } else {
+                    isAdd = true
+                    let bookmark = Bookmark()
+                    bookmark.id = id
+                    bookmark.url = url
+                    bookmark.title = title
+                    modelContext.insert(bookmark)
+                    isShowAlert.toggle()
+                }
+                
+            }, label: {
+                if let _ = bookmarks.first {
+                    Image(systemName: "trash")
+                } else {
+                    Image(systemName: "plus")
+                }
+                
+            })
+        })
     }
     
 }

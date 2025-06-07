@@ -12,7 +12,9 @@ struct ArticleListScreen: View {
     @State private var viewModel = ArticleListViewModel()
     
     @State private var isBookmarkSheet = false
-
+    
+    @State private var isHistorySheet = false
+    
     
     var body: some View {
         NavigationStack {
@@ -26,6 +28,10 @@ struct ArticleListScreen: View {
                 .toolbar {
                     ToolbarItemGroup(placement: .topBarTrailing) {
                         topBarTrailing
+                    }
+                    
+                    ToolbarItemGroup(placement: .topBarLeading) {
+                        topBarLeading
                     }
                 }
                 .searchable(text: $viewModel.searchText,
@@ -47,6 +53,9 @@ struct ArticleListScreen: View {
         }
         .fullScreenCover(isPresented: $isBookmarkSheet) {
             BookmarkListScreen()
+        }
+        .fullScreenCover(isPresented: $isHistorySheet) {
+            HistoryListScreen()
         }
     }
     
@@ -85,35 +94,45 @@ struct ArticleListScreen: View {
     
     @ViewBuilder
     private var topBarTrailing: some View {
-            Menu(content: {
-                Button(action: {
-                    viewModel.mode = .keyword
-                }, label: {
-                    if viewModel.mode == .keyword {
-                        Label(R.string.label.keywordSearch(), systemImage: "checkmark")
-                    } else {
-                        Text(R.string.label.keywordSearch())
-                    }
-                    
-                })
-                Button(action: {
-                    viewModel.mode = .tag
-                }, label: {
-                    if viewModel.mode == .tag {
-                        Label(R.string.label.tagSearch(), systemImage: "checkmark")
-                    } else {
-                        Text(R.string.label.tagSearch())
-                    }
-                })
-            }, label: {
-                Image(systemName: "magnifyingglass")
-            })
-            
+        Menu(content: {
             Button(action: {
-                isBookmarkSheet.toggle()
+                viewModel.mode = .keyword
             }, label: {
-                Image(systemName: "bookmark")
+                if viewModel.mode == .keyword {
+                    Label(R.string.label.keywordSearch(), systemImage: "checkmark")
+                } else {
+                    Text(R.string.label.keywordSearch())
+                }
+                
             })
+            Button(action: {
+                viewModel.mode = .tag
+            }, label: {
+                if viewModel.mode == .tag {
+                    Label(R.string.label.tagSearch(), systemImage: "checkmark")
+                } else {
+                    Text(R.string.label.tagSearch())
+                }
+            })
+        }, label: {
+            Image(systemName: "magnifyingglass")
+        })
+        
+        Button(action: {
+            isBookmarkSheet.toggle()
+        }, label: {
+            Image(systemName: "bookmark")
+        })
+    }
+    
+    
+    @ViewBuilder
+    private var topBarLeading: some View {
+        Button(action: {
+            isHistorySheet.toggle()
+        }, label: {
+            Image(systemName: "clock.arrow.trianglehead.counterclockwise.rotate.90")
+        })
     }
 }
 
