@@ -35,13 +35,7 @@ struct ArticleScreen: View {
             }
         })
         
-        _historys = Query(filter: #Predicate { model in
-            if id.isEmpty {
-                true
-            } else {
-                model.id.localizedStandardContains(id)
-            }
-        })
+        _historys = Query(sort: [SortDescriptor(\History.update_at, order: .reverse)])
         self.id = id
         self.url = url
         self.title = title
@@ -57,17 +51,22 @@ struct ArticleScreen: View {
                 return Alert(title: Text(isAdd ? R.string.label.addBookmark() : R.string.label.deleteBookmark()), dismissButton: .default(Text(R.string.button.close())))
             }
             .onAppear {
-                let created_at = DateFormatter.dateFormatNow(type: .secnd)
-                if let history = historys.first {
-                    history.update_at = created_at
+                let date = DateFormatter.dateFormatNow(type: .secnd)
+                if let history = historys.first(where: { $0.id == id }) {
+                    history.update_at = date
                 } else {
                     let history = History()
                     history.id = id
                     history.url = url
                     history.title = title
-                    history.created_at = created_at
-                    history.update_at = created_at
+                    history.created_at = date
+                    history.update_at = date
                     modelContext.insert(history)
+                    
+                    if historys.count >= 30,
+                       let last = historys.last {
+                        modelContext.delete(last)
+                    }
                 }
                 
                 
