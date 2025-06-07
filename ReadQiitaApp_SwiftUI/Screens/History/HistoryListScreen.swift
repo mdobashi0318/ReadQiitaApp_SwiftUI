@@ -28,7 +28,7 @@ struct HistoryListScreen: View {
                     })
                 }
             }
-            .navigationTitle("history")
+            .navigationTitle(R.string.label.history())
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: {
