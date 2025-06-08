@@ -18,6 +18,10 @@ struct BookmarkListScreen: View {
     
     @State private var alertMessage = ""
     
+    init() {
+        _bookmarks = Query(sort: [SortDescriptor(\Bookmark.update_at, order: .reverse)])
+    }
+    
     var body: some View {
         NavigationStack {
             list

@@ -27,6 +27,10 @@ class Bookmark {
     
     var url: String = ""
     
+    var created_at: Date = Date()
+    
+    var update_at: Date = Date()
+    
     init() { }
     
 }

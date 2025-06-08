@@ -82,11 +82,14 @@ struct ArticleScreen: View {
                     modelContext.delete(bookmark)
                     isShowAlert.toggle()
                 } else {
+                    let date = DateFormatter.dateFormatNow(type: .secnd)
                     isAdd = true
                     let bookmark = Bookmark()
                     bookmark.id = id
                     bookmark.url = url
                     bookmark.title = title
+                    bookmark.created_at = date
+                    bookmark.update_at = date
                     modelContext.insert(bookmark)
                     isShowAlert.toggle()
                 }
