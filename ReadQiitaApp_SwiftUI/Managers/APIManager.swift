@@ -18,7 +18,7 @@ struct APIManager {
     
     private static let baseUrl = "https://qiita.com/api/v2/"
     
-    static func request<T: Codable>(request: String, param: Parameters? = nil) async throws(APIError) -> T {
+    static func request<T: Codable & Sendable>(request: String, param: Parameters? = nil) async throws(APIError) -> T {
         guard let url = URL(string: baseUrl + request) else {
             throw APIError(message: R.string.message.errorMessage())
         }
