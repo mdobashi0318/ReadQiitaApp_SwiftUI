@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import WebKit
 
 struct ArticleScreen: View {
     
@@ -15,6 +16,8 @@ struct ArticleScreen: View {
     @Query private var bookmarks: [Bookmark]
     
     @Query private var historys: [History]
+    
+    @State private var page = WebPage()
     
     private let id: String
     private let url: String
@@ -42,35 +45,42 @@ struct ArticleScreen: View {
     }
     
     var body: some View {
-        WebView(loadUrl: URL(string: url)!)
-            .navigationTitle(R.string.label.article())
-            .toolbar {
-                toolbar
+        ZStack {
+            WebView(page)
+            if page.estimatedProgress < 1 {
+                ProgressView(value: page.estimatedProgress)
+                    .progressViewStyle(CircularProgressViewStyle())
             }
-            .alert(isPresented: $isShowAlert) {
-                return Alert(title: Text(isAdd ? R.string.label.addBookmark() : R.string.label.deleteBookmark()), dismissButton: .default(Text(R.string.button.close())))
-            }
-            .onAppear {
-                let date = DateFormatter.dateFormatNow(type: .secnd)
-                if let history = historys.first(where: { $0.id == id }) {
-                    history.update_at = date
-                } else {
-                    let history = History()
-                    history.id = id
-                    history.url = url
-                    history.title = title
-                    history.created_at = date
-                    history.update_at = date
-                    modelContext.insert(history)
-                    
-                    if historys.count >= 30,
-                       let last = historys.last {
-                        modelContext.delete(last)
-                    }
+        }
+        .navigationTitle(R.string.label.article())
+        .toolbar {
+            toolbar
+        }
+        .alert(isPresented: $isShowAlert) {
+            return Alert(title: Text(isAdd ? R.string.label.addBookmark() : R.string.label.deleteBookmark()), dismissButton: .default(Text(R.string.button.close())))
+        }
+        .onAppear {
+            page.load(URL(string: url)!)
+            let date = DateFormatter.dateFormatNow(type: .secnd)
+            if let history = historys.first(where: { $0.id == id }) {
+                history.update_at = date
+            } else {
+                let history = History()
+                history.id = id
+                history.url = url
+                history.title = title
+                history.created_at = date
+                history.update_at = date
+                modelContext.insert(history)
+                
+                if historys.count >= 30,
+                   let last = historys.last {
+                    modelContext.delete(last)
                 }
-                
-                
             }
+            
+            
+        }
     }
     
     
