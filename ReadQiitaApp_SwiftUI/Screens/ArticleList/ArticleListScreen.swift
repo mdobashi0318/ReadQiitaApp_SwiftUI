@@ -10,11 +10,8 @@ import SwiftUI
 struct ArticleListScreen: View {
     
     @State private var viewModel = ArticleListViewModel()
-    
     @State private var isBookmarkSheet = false
-    
     @State private var isHistorySheet = false
-    
     
     var body: some View {
         NavigationStack {
@@ -68,17 +65,33 @@ struct ArticleListScreen: View {
             if viewModel.model.isEmpty {
                 Text(R.string.label.noArticle)
             } else {
-                List {
-                    ForEach(viewModel.model) { model in
-                        NavigationLink(value: model.id, label: {
-                            ArticleRow(article: model)
-                        })
+                if false {
+                    List {
+                        ForEach(viewModel.model) { model in
+                            NavigationLink(value: model.id, label: {
+                                ArticleRow(article: model)
+                            })
+                        }
+                    }
+                    .listStyle(.inset)
+                    .refreshable {
+                        viewModel.fetchArticleList()
+                    }
+                } else {
+                    ScrollView {
+                        LazyVGrid(columns: [GridItem(.flexible()),GridItem(.flexible())]) {
+                            ForEach(viewModel.model) { model in
+                                NavigationLink(value: model.id, label: {
+                                    ArticleGridRow(article: model)
+                                })
+                            }
+                        }
+                    }
+                    .refreshable {
+                        viewModel.fetchArticleList()
                     }
                 }
-                .listStyle(.inset)
-                .refreshable {
-                    viewModel.fetchArticleList()
-                }
+                
             }
         }
     }
