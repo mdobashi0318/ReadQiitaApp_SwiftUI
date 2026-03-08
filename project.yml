@@ -77,13 +77,13 @@ targets:
 packages:
  XcodeGen:
     url: https://github.com/yonaskolb/XcodeGen
-    version: 2.42.0
+    version: 2.44.1
  Rswift:
     url: https://github.com/mac-cain13/R.swift
     version: 7.4.0
  Alamofire:
     url: https://github.com/Alamofire/Alamofire
-    version: 5.9.1
+    version: 5.11.1
 
 schemes:
   ReadQiitaApp_SwiftUI:

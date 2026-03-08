@@ -29,3 +29,6 @@
 
 "NoHistory" = "閲覧履歴はまだありません";
 
+"listMode" = "リスト";
+"gridMode" = "グリッド";
+
