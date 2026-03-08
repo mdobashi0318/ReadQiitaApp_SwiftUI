@@ -9,13 +9,28 @@ import SwiftUI
 
 struct ArticleListScreen: View {
     
+    enum DispMode: String {
+        case list
+        case grid
+        
+        var title: String {
+            return switch self {
+            case .list:
+                R.string.label.listMode()
+            case .grid:
+                R.string.label.gridMode()
+            }
+        }
+    }
+    
     @State private var viewModel = ArticleListViewModel()
     @State private var isBookmarkSheet = false
     @State private var isHistorySheet = false
+    @AppStorage("dispMode") private var dispMode: DispMode = .list
     
     var body: some View {
         NavigationStack {
-            list
+            contentsView
                 .navigationTitle("ReadQiitaApp")
                 .navigationDestination(for: String.self) { id in
                     if let article = viewModel.model.first(where: { $0.id == id }) {
@@ -56,43 +71,49 @@ struct ArticleListScreen: View {
         }
     }
     
-    
     @ViewBuilder
-    private var list: some View {
+    private var contentsView: some View {
         if viewModel.isLoading {
             ProgressView()
         } else {
             if viewModel.model.isEmpty {
                 Text(R.string.label.noArticle)
             } else {
-                if false {
-                    List {
-                        ForEach(viewModel.model) { model in
-                            NavigationLink(value: model.id, label: {
-                                ArticleRow(article: model)
-                            })
-                        }
-                    }
-                    .listStyle(.inset)
-                    .refreshable {
-                        viewModel.fetchArticleList()
-                    }
+                if dispMode == .list {
+                    listView
                 } else {
-                    ScrollView {
-                        LazyVGrid(columns: [GridItem(.flexible()),GridItem(.flexible())]) {
-                            ForEach(viewModel.model) { model in
-                                NavigationLink(value: model.id, label: {
-                                    ArticleGridRow(article: model)
-                                })
-                            }
-                        }
-                    }
-                    .refreshable {
-                        viewModel.fetchArticleList()
-                    }
+                    gridView
                 }
-                
             }
+        }
+    }
+    
+    private var listView: some View {
+        List {
+            ForEach(viewModel.model) { model in
+                NavigationLink(value: model.id, label: {
+                    ArticleRow(article: model)
+                })
+            }
+        }
+        .listStyle(.inset)
+        .refreshable {
+            viewModel.fetchArticleList()
+        }
+    }
+    
+    private var gridView: some View {
+        ScrollView {
+            LazyVGrid(columns: [GridItem(.flexible()),GridItem(.flexible())]) {
+                ForEach(viewModel.model) { model in
+                    NavigationLink(value: model.id, label: {
+                        ArticleGridRow(article: model)
+                    })
+                }
+            }
+        }
+        .refreshable {
+            viewModel.fetchArticleList()
         }
     }
     
@@ -107,6 +128,16 @@ struct ArticleListScreen: View {
     
     @ViewBuilder
     private var topBarTrailing: some View {
+        dispModeButton
+        searchModeButton
+        Button(action: {
+            isBookmarkSheet.toggle()
+        }, label: {
+            Image(systemName: "bookmark")
+        })
+    }
+    
+    private var searchModeButton: some View {
         Menu(content: {
             Button(action: {
                 viewModel.mode = .keyword
@@ -130,14 +161,32 @@ struct ArticleListScreen: View {
         }, label: {
             Image(systemName: "magnifyingglass")
         })
-        
-        Button(action: {
-            isBookmarkSheet.toggle()
-        }, label: {
-            Image(systemName: "bookmark")
-        })
     }
     
+    private var dispModeButton: some View {
+        Menu(content: {
+            Button(action: {
+                dispMode = .list
+            }, label: {
+                if dispMode == .list {
+                    Label(DispMode.list.title, systemImage: "checkmark")
+                } else {
+                    Text(DispMode.list.title)
+                }
+            })
+            Button(action: {
+                dispMode = .grid
+            }, label: {
+                if dispMode == .grid {
+                    Label(DispMode.grid.title, systemImage: "checkmark")
+                } else {
+                    Text(DispMode.grid.title)
+                }
+            })
+        }, label: {
+            Image(systemName: dispMode == .list ? "list.dash" : "square.grid.2x2")
+        })
+    }
     
     @ViewBuilder
     private var topBarLeading: some View {
