@@ -9,26 +9,20 @@ import Foundation
 
 @Observable
 class ArticleListViewModel {
-    
+
     private(set) var model: [Article] = []
-    
     private(set) var isLoading = false
-    
     private(set) var alertMessage = ""
-    
     var isShowAlert = false
-    
     var searchText = ""
     
-    var mode: SearchMode = .keyword
-    
     @MainActor
-    func fetchArticleList() {
+    func fetchArticleList(_ searchMode: SearchMode) {
         Task {
             do {
                 isLoading = true
                 
-                if mode == .keyword {
+                if searchMode == .keyword {
                     if searchText.isEmpty {
                         model = try await APIManager.request(request: "items")
                     } else {
@@ -49,10 +43,4 @@ class ArticleListViewModel {
             }
         }
     }
-    
-    enum SearchMode {
-        case keyword
-        case tag
-    }
-
 }

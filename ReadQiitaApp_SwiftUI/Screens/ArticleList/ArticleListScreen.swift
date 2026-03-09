@@ -27,6 +27,7 @@ struct ArticleListScreen: View {
     @State private var isBookmarkSheet = false
     @State private var isHistorySheet = false
     @AppStorage("dispMode") private var dispMode: DispMode = .list
+    @AppStorage("SearchMode") private var searchMode: SearchMode = .keyword
     
     var body: some View {
         NavigationStack {
@@ -47,18 +48,18 @@ struct ArticleListScreen: View {
                     }
                 }
                 .searchable(text: $viewModel.searchText,
-                            prompt: Text(viewModel.mode == .keyword ? R.string.message.keywordSearch() : R.string.message.tagSearch()))
+                            prompt: Text(searchMode == .keyword ? R.string.message.keywordSearch() : R.string.message.tagSearch()))
                 .onSubmit(of: .search) {
-                    viewModel.fetchArticleList()
+                    viewModel.fetchArticleList(searchMode)
                 }
                 .onChange(of: viewModel.searchText) {
                     if viewModel.searchText.isEmpty {
-                        viewModel.fetchArticleList()
+                        viewModel.fetchArticleList(searchMode)
                     }
                 }
         }
         .onAppear {
-            viewModel.fetchArticleList()
+            viewModel.fetchArticleList(searchMode)
         }
         .alert(isPresented: $viewModel.isShowAlert) {
             alert
@@ -98,7 +99,7 @@ struct ArticleListScreen: View {
         }
         .listStyle(.inset)
         .refreshable {
-            viewModel.fetchArticleList()
+            viewModel.fetchArticleList(searchMode)
         }
     }
     
@@ -113,14 +114,14 @@ struct ArticleListScreen: View {
             }
         }
         .refreshable {
-            viewModel.fetchArticleList()
+            viewModel.fetchArticleList(searchMode)
         }
     }
     
     private var alert: Alert {
         Alert(title: Text(viewModel.alertMessage),
               primaryButton: .default(Text(R.string.button.retry()),
-                                      action: viewModel.fetchArticleList
+                                      action: { viewModel.fetchArticleList(searchMode) }
                                      ),
               secondaryButton: .cancel(Text(R.string.button.close()))
         )
@@ -140,9 +141,9 @@ struct ArticleListScreen: View {
     private var searchModeButton: some View {
         Menu(content: {
             Button(action: {
-                viewModel.mode = .keyword
+                searchMode = .keyword
             }, label: {
-                if viewModel.mode == .keyword {
+                if searchMode == .keyword {
                     Label(R.string.label.keywordSearch(), systemImage: "checkmark")
                 } else {
                     Text(R.string.label.keywordSearch())
@@ -150,9 +151,9 @@ struct ArticleListScreen: View {
                 
             })
             Button(action: {
-                viewModel.mode = .tag
+                searchMode = .tag
             }, label: {
-                if viewModel.mode == .tag {
+                if searchMode == .tag {
                     Label(R.string.label.tagSearch(), systemImage: "checkmark")
                 } else {
                     Text(R.string.label.tagSearch())
