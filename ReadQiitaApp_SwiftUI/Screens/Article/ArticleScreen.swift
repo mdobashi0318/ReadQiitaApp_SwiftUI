@@ -12,22 +12,19 @@ import WebKit
 struct ArticleScreen: View {
     
     @Environment(\.modelContext) private var modelContext
-    
+    @Environment(\.dismiss) private var dismiss
     @Query private var bookmarks: [Bookmark]
-    
     @Query private var historys: [History]
-    
     @State private var page = WebPage()
+    @State private var alertMessage = ""
+    @State private var isShowAlert = false
+    @State private var isAdd = false
+    @State private var pageCount = 0
     
     private let id: String
     private let url: String
     private let title: String
     
-    @State private var alertMessage = ""
-    
-    @State private var isShowAlert = false
-    
-    @State private var isAdd = false
     
     init(id: String, url: String, title: String) {
         _bookmarks = Query(filter: #Predicate { model in
@@ -55,7 +52,9 @@ struct ArticleScreen: View {
         .navigationTitle(R.string.label.article())
         .toolbar {
             toolbar
+            leadingToolbar
         }
+        .navigationBarBackButtonHidden()
         .alert(isPresented: $isShowAlert) {
             return Alert(title: Text(isAdd ? R.string.label.addBookmark() : R.string.label.deleteBookmark()), dismissButton: .default(Text(R.string.button.close())))
         }
@@ -115,8 +114,51 @@ struct ArticleScreen: View {
         })
     }
     
+    private var leadingToolbar: some ToolbarContent {
+        ToolbarItem(placement: .topBarLeading, content: {
+            BackForwardMenuView(
+                list: page.backForwardList.backList.reversed(),
+                label: .init(text: "Backward", systemImage: "chevron.backward")
+            ) {
+                page.load($0)
+            } dissmiss: {
+                dismiss()
+            }
+        })
+    }
 }
 
-//#Preview {
-//    ArticleScreen()
-//}
+
+// https://developer.apple.com/documentation/webkit/webpage/backforwardlist-swift.struct
+private struct BackForwardMenuView: View {
+    struct LabelConfiguration {
+        let text: String
+        let systemImage: String
+    }
+
+
+    let list: [WebPage.BackForwardList.Item]
+    let label: LabelConfiguration
+    let navigateToItem: (WebPage.BackForwardList.Item) -> Void
+    let dissmiss: () -> Void
+
+
+    var body: some View {
+        Menu {
+            ForEach(list) { item in
+                Button(item.title ?? item.url.absoluteString) {
+                    navigateToItem(item)
+                }
+            }
+        } label: {
+            Label(label.text, systemImage: label.systemImage)
+                .labelStyle(.iconOnly)
+        } primaryAction: {
+            if let first = list.first{
+                navigateToItem(first)
+            } else {
+                dissmiss()
+            }
+        }
+    }
+}
