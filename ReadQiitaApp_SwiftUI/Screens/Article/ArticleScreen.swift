@@ -19,7 +19,6 @@ struct ArticleScreen: View {
     @State private var alertMessage = ""
     @State private var isShowAlert = false
     @State private var isAdd = false
-    @State private var pageCount = 0
     
     private let id: String
     private let url: String
@@ -60,25 +59,11 @@ struct ArticleScreen: View {
         }
         .onAppear {
             page.load(URL(string: url)!)
-            let date = DateFormatter.dateFormatNow(type: .secnd)
-            if let history = historys.first(where: { $0.id == id }) {
-                history.update_at = date
-            } else {
-                let history = History()
-                history.id = id
-                history.url = url
-                history.title = title
-                history.created_at = date
-                history.update_at = date
-                modelContext.insert(history)
-                
-                if historys.count >= 30,
-                   let last = historys.last {
-                    modelContext.delete(last)
-                }
+        }
+        .task(id: page.estimatedProgress) {
+            if url == page.url?.absoluteString && page.estimatedProgress >= 1 {
+                saveHistory()
             }
-            
-            
         }
     }
     
@@ -126,6 +111,31 @@ struct ArticleScreen: View {
             }
         })
     }
+    
+    private func saveHistory() {
+        let date = DateFormatter.dateFormatNow(type: .secnd)
+        if let history = historys.first(where: { $0.id == id }) {
+            if page.title.contains("404 Not Found - Qiita - Qiita") {
+                modelContext.delete(history)
+                print("ページが見つからなかったため履歴から削除しました")
+            } else {
+                history.update_at = date
+            }
+        } else {
+            let history = History()
+            history.id = id
+            history.url = url
+            history.title = title
+            history.created_at = date
+            history.update_at = date
+            modelContext.insert(history)
+            
+            if historys.count >= 30,
+               let last = historys.last {
+                modelContext.delete(last)
+            }
+        }
+    }
 }
 
 
@@ -135,14 +145,12 @@ private struct BackForwardMenuView: View {
         let text: String
         let systemImage: String
     }
-
-
+    
     let list: [WebPage.BackForwardList.Item]
     let label: LabelConfiguration
     let navigateToItem: (WebPage.BackForwardList.Item) -> Void
     let dissmiss: () -> Void
-
-
+    
     var body: some View {
         Menu {
             ForEach(list) { item in
@@ -154,7 +162,7 @@ private struct BackForwardMenuView: View {
             Label(label.text, systemImage: label.systemImage)
                 .labelStyle(.iconOnly)
         } primaryAction: {
-            if let first = list.first{
+            if let first = list.first {
                 navigateToItem(first)
             } else {
                 dissmiss()
