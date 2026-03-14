@@ -71,7 +71,7 @@ struct HistoryListScreen: View {
             List {
                 ForEach(historyList) { history in
                     NavigationLink(value: history , label: {
-                        Text(history.title)
+                        HistoryRow(history: history)
                     })
                 }
                 .onDelete(perform: delete)
