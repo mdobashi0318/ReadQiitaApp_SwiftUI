@@ -12,11 +12,9 @@ import SwiftData
 struct HistoryListScreen: View {
     
     @Query private var historyList: [History]
-    
+    @Query private var bookmarks: [Bookmark]
     @Environment(\.dismiss) private var dismiss
-    
     @Environment(\.modelContext) private var modelContext
-    
     @State private var confirmDelete = false
     
     init() {
@@ -71,7 +69,9 @@ struct HistoryListScreen: View {
             List {
                 ForEach(historyList) { history in
                     NavigationLink(value: history , label: {
-                        HistoryRow(history: history)
+                        HistoryRow(history: history,
+                                   isBookmarked: (bookmarks.first(where: { $0.id == history.id }) != nil)
+                        )
                     })
                 }
                 .onDelete(perform: delete)
