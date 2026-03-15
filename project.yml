@@ -3,7 +3,7 @@ targets:
   ReadQiitaApp_SwiftUI:
     type: application
     platform: iOS
-    deploymentTarget: &deployment_target "17.0"
+    deploymentTarget: &deployment_target "26.0"
     info:
       path: ReadQiitaApp_SwiftUI/Info.plist
       properties:
@@ -28,11 +28,10 @@ targets:
          CURRENT_PROJECT_VERSIO: 1
          PRODUCT_BUNDLE_IDENTIFIER: "masaharu.dobashi.ReadQiitaApp"
          PRODUCT_NAME: "$(TARGET_NAME)"
+         SWIFT_VERSION: 6
     options:
         developmentLanguage: ja
     dependencies:
-        - package: Realm
-          product: RealmSwift
         - package: Rswift
           product: RswiftLibrary
         - package: Alamofire
@@ -78,16 +77,13 @@ targets:
 packages:
  XcodeGen:
     url: https://github.com/yonaskolb/XcodeGen
-    version: 2.42.0
- Realm:
-    url: https://github.com/realm/realm-swift
-    version: 10.52.2
+    version: 2.44.1
  Rswift:
     url: https://github.com/mac-cain13/R.swift
     version: 7.4.0
  Alamofire:
     url: https://github.com/Alamofire/Alamofire
-    version: 5.9.1
+    version: 5.11.1
 
 schemes:
   ReadQiitaApp_SwiftUI:

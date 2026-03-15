@@ -8,6 +8,7 @@
 
 "Article" = "記事";
 "Bookmark" = "ブックマーク";
+"History" = "閲覧履歴";
 
 "KeywordSearch" = "キーワード検索";
 "TagSearch" = "タグ検索";
@@ -24,3 +25,10 @@
 
 "NoBookmark" = "ブックマークはまだありません";
 "NoArticle" = "検索に一致する記事はありませんでした。";
+
+
+"NoHistory" = "閲覧履歴はまだありません";
+
+"listMode" = "リスト";
+"gridMode" = "グリッド";
+

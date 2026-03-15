@@ -6,28 +6,31 @@
 //
 
 import Foundation
-import RealmSwift
+import SwiftData
 
-class Bookmark: Object, Identifiable {
+struct DBError: Error {
     
-    @Persisted(primaryKey: true) var id: String = ""
-     
-    @Persisted var title: String = ""
-     
-    @Persisted var url: String = ""
+    let message: String
     
-    
-    static func allFetch() throws -> [Bookmark] {
-        do {
-            var model: [Bookmark] = []
-            let realm = try Realm()
-            realm.objects(Bookmark.self).freeze().forEach {
-                model.append($0)
-            }
-            return model
-        } catch {
-            throw APIError(message: "")
-        }
+    init(message: String) {
+        self.message = message
     }
-     
+}
+
+
+@Model
+class Bookmark {
+    
+    @Relationship(.unique) var id: String = ""
+    
+    var title: String = ""
+    
+    var url: String = ""
+    
+    var created_at: Date = Date()
+    
+    var update_at: Date = Date()
+    
+    init() { }
+    
 }

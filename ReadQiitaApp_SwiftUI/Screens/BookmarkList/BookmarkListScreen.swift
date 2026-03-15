@@ -6,12 +6,21 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct BookmarkListScreen: View {
     
-    @State private var viewModel = BookmarkListViewModel()
+    @Query private var bookmarks: [Bookmark]
     
     @Environment(\.dismiss) private var dismiss
+    
+    @State private var isShowAlert = false
+    
+    @State private var alertMessage = ""
+    
+    init() {
+        _bookmarks = Query(sort: [SortDescriptor(\Bookmark.update_at, order: .reverse)])
+    }
     
     var body: some View {
         NavigationStack {
@@ -26,16 +35,11 @@ struct BookmarkListScreen: View {
                         })
                     }
                 }
-                .navigationDestination(for: String.self, destination: { id in
-                    if let article = viewModel.model.first(where: { $0.id == id }) {
-                        ArticleScreen(id: article.id, url: article.url, title: article.title)
-                            .onDisappear {
-                                viewModel.allFetch()
-                            }
-                    }
+                .navigationDestination(for: Bookmark.self, destination: { bookmark in
+                    ArticleScreen(id: bookmark.id, url: bookmark.url, title: bookmark.title)
                 })
-                .alert(isPresented: $viewModel.isShowAlert) {
-                    Alert(title: Text(viewModel.alertMessage),
+                .alert(isPresented: $isShowAlert) {
+                    Alert(title: Text(alertMessage),
                           dismissButton: .cancel(Text("閉じる"), action: { dismiss() })
                     )
                 }
@@ -45,12 +49,12 @@ struct BookmarkListScreen: View {
     
     @ViewBuilder
     private var list: some View {
-        if viewModel.model.isEmpty {
+        if bookmarks.isEmpty {
             Text(R.string.label.noBookmark())
         } else {
             List {
-                ForEach(viewModel.model) { bookmark in
-                    NavigationLink(value: bookmark.id , label: {
+                ForEach(bookmarks) { bookmark in
+                    NavigationLink(value: bookmark , label: {
                         Text(bookmark.title)
                     })
                 }
