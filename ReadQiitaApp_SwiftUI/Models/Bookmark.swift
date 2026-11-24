@@ -21,7 +21,7 @@ struct DBError: Error {
 @Model
 class Bookmark {
     
-    @Relationship(.unique) var id: String = ""
+    @Attribute(.unique) var id: String = ""
     
     var title: String = ""
     
